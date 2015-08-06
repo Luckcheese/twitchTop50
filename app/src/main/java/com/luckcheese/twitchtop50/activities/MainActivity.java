@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,10 +20,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main_list);
+//        setContentView(R.layout.activity_main_list);
+//        ListView listView = (ListView) findViewById(R.id.listView);
+//        listView.setAdapter(new ListAdapter(this));
 
-        ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(new ListAdapter(this));
+        setContentView(R.layout.activity_main_grid);
+        GridView gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setAdapter(new ListAdapter(this));
     }
 
     // ----- Related classes --------------------------------------------------
@@ -32,7 +36,8 @@ public class MainActivity extends Activity {
         private LayoutInflater inflater;
 
         public ListAdapter(Context context) {
-            super(context, R.layout.list_item);
+//            super(context, R.layout.list_item);
+            super(context, R.layout.grid_item);
 
             inflater = LayoutInflater.from(context);
         }
@@ -45,7 +50,8 @@ public class MainActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_item, parent, false);
+//                convertView = inflater.inflate(R.layout.list_item, parent, false);
+                convertView = inflater.inflate(R.layout.grid_item, parent, false);
             }
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
