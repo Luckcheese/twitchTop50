@@ -19,6 +19,7 @@ import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
 import com.luckcheese.twitchtop50.models.Game;
 import com.luckcheese.twitchtop50.models.TwitchReturnModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -154,7 +155,9 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
             Game game = getItem(position).getGame();
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-            imageView.setImageResource(R.drawable.ic_launcher);
+            Picasso.with(getContext())
+                    .load(game.logo(Game.ImageLinks.ImageSize.Medium))
+                    .into(imageView);
 
             TextView textView = (TextView) convertView.findViewById(R.id.textView);
             textView.setText(game.getName());
