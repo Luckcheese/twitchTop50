@@ -156,7 +156,7 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
             Picasso.with(getContext())
-                    .load(game.logo(Game.ImageLinks.ImageSize.Medium))
+                    .load(game.getLogoImageUrl(Game.ImageLinks.ImageSize.Medium))
                     .into(imageView);
 
             TextView textView = (TextView) convertView.findViewById(R.id.textView);

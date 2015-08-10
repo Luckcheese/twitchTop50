@@ -13,11 +13,11 @@ public class Game implements Serializable {
         return name;
     }
 
-    public String box(ImageLinks.ImageSize size) {
+    public String getBoxImagUrl(ImageLinks.ImageSize size) {
         return size.get(box);
     }
 
-    public String logo(ImageLinks.ImageSize size) {
+    public String getLogoImageUrl(ImageLinks.ImageSize size) {
         return size.get(logo);
     }
 
