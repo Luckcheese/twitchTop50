@@ -7,7 +7,7 @@
         android:name=".TwitchTop50App"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
 
         <activity android:name=".activities.MainActivity">
