@@ -1,41 +1,50 @@
 package com.luckcheese.twitchtop50.activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 
-import com.blunderer.materialdesignlibrary.activities.Activity;
+import com.blunderer.materialdesignlibrary.activities.ViewPagerActivity;
 import com.blunderer.materialdesignlibrary.handlers.ActionBarDefaultHandler;
 import com.blunderer.materialdesignlibrary.handlers.ActionBarHandler;
+import com.blunderer.materialdesignlibrary.handlers.ViewPagerHandler;
 import com.luckcheese.twitchtop50.R;
+import com.luckcheese.twitchtop50.fragments.GamesFragment;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
-import com.luckcheese.twitchtop50.models.Game;
 import com.luckcheese.twitchtop50.models.TwitchReturnModel;
-import com.luckcheese.twitchtop50.views.ListItem;
 
-import java.util.List;
-
-public class MainActivity extends Activity implements BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel> {
-
-    public static final String INTENT_VIEW_TYPE = "com.luckcheese.twitchtop50.INTENT_VIEW_TYPE";
+public class MainActivity extends ViewPagerActivity
+        implements BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel> {
 
     private BroadcastManager.BaseBroadcastReceiver<TwitchReturnModel> gamesReceiver;
-    private ViewTypes viewType;
+
+    private TwitchReturnModel top50Games;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gamesReceiver = new BroadcastManager.BaseBroadcastReceiver<>(this);
 
-        setupView();
+        setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (top50Games != null) {
+                    getCurrentFragment().setGames(top50Games);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -53,13 +62,13 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
     }
 
     @Override
-    protected int getContentView() {
-        if (getIntent().hasExtra(INTENT_VIEW_TYPE)) {
-            viewType = (ViewTypes) getIntent().getSerializableExtra(INTENT_VIEW_TYPE);
-        } else {
-            viewType = ViewTypes.ListView;
-        }
-        return viewType == ViewTypes.GridView ? R.layout.activity_main_grid : R.layout.activity_main_list;
+    public boolean showViewPagerIndicator() {
+        return false;
+    }
+
+    @Override
+    public boolean replaceActionBarTitleByViewPagerPageTitle() {
+        return false;
     }
 
     @Override
@@ -72,25 +81,8 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
         return new ActionBarDefaultHandler(this);
     }
 
-    private void setupView() {
-        if (getIntent().hasExtra(INTENT_VIEW_TYPE)) {
-            viewType = (ViewTypes) getIntent().getSerializableExtra(INTENT_VIEW_TYPE);
-        } else {
-            viewType = ViewTypes.ListView;
-        }
-
-        int adapterResource = 0;
-        switch (viewType) {
-            case GridView:
-                adapterResource = R.layout.grid_item;
-                break;
-
-            case ListView:
-                adapterResource = R.layout.list_item;
-                break;
-        }
-        AbsListView listView = (AbsListView) findViewById(R.id.listView);
-        listView.setAdapter(new ListAdapter(this, adapterResource));
+    private GamesFragment getCurrentFragment() {
+        return (GamesFragment) getSupportFragmentManager().getFragments().get(mViewPager.getCurrentItem());
     }
 
     // ----- Menu related methods ---------------------------------------------
@@ -98,15 +90,7 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        switch (viewType) {
-            case GridView:
-                inflater.inflate(R.menu.activity_main_grid, menu);
-                break;
-
-            case ListView:
-                inflater.inflate(R.menu.activity_main_list, menu);
-                break;
-        }
+        inflater.inflate(R.menu.activity_main_grid, menu);
         return true;
     }
 
@@ -116,20 +100,10 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
             return super.onOptionsItemSelected(item);
         }
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        GamesFragment.ViewType viewType = getCurrentFragment().getViewType();
+        int nextPos = viewType == GamesFragment.ViewType.ListView ? 1 : 0;
+        mViewPager.setCurrentItem(nextPos, true);
 
-        switch (viewType) {
-            case GridView:
-                intent.putExtra(INTENT_VIEW_TYPE, ViewTypes.ListView);
-                break;
-
-            case ListView:
-                intent.putExtra(INTENT_VIEW_TYPE, ViewTypes.GridView);
-                break;
-        }
-
-        startActivity(intent);
         return true;
     }
 
@@ -137,10 +111,8 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
 
     @Override
     public void onSuccess(TwitchReturnModel data) {
-        AbsListView listView = (AbsListView) findViewById(R.id.listView);
-        ListAdapter adapter = (ListAdapter) listView.getAdapter();
-        adapter.setItems(data.getTop());
-        adapter.notifyDataSetChanged();
+        top50Games = data;
+        getCurrentFragment().setGames(top50Games);
     }
 
     @Override
@@ -148,39 +120,18 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
         // do nothing
     }
 
-    // ----- Related classes --------------------------------------------------
+    // ----- ViewPager --------------------------------------------------------
 
-    public enum ViewTypes {
-        ListView, GridView
+    @Override
+    public ViewPagerHandler getViewPagerHandler() {
+        ViewPagerHandler handler = new ViewPagerHandler(this);
+        handler.addPage("", GamesFragment.newInstance(GamesFragment.ViewType.ListView));
+        handler.addPage("", GamesFragment.newInstance(GamesFragment.ViewType.GridView));
+        return handler;
     }
 
-    private static final class ListAdapter extends ArrayAdapter<Game.Entry> {
-
-        private LayoutInflater inflater;
-        private int resource;
-
-        public ListAdapter(Context context, int resource) {
-            super(context, resource);
-
-            inflater = LayoutInflater.from(context);
-            this.resource = resource;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater.inflate(resource, parent, false);
-            }
-
-            Game game = getItem(position).getGame();
-            ((ListItem) convertView).setGame(game);
-
-            return convertView;
-        }
-
-        public void setItems(List<Game.Entry> items) {
-            clear();
-            addAll(items);
-        }
+    @Override
+    public int defaultViewPagerPageSelectedPosition() {
+        return 0;
     }
 }
