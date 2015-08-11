@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.blunderer.materialdesignlibrary.activities.Activity;
 import com.blunderer.materialdesignlibrary.handlers.ActionBarDefaultHandler;
@@ -21,7 +19,7 @@ import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
 import com.luckcheese.twitchtop50.models.Game;
 import com.luckcheese.twitchtop50.models.TwitchReturnModel;
-import com.squareup.picasso.Picasso;
+import com.luckcheese.twitchtop50.views.ListItem;
 
 import java.util.List;
 
@@ -175,15 +173,7 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
             }
 
             Game game = getItem(position).getGame();
-
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-            Picasso.with(getContext())
-                    .load(game.getLogoImageUrl(Game.ImageLinks.ImageSize.Medium))
-                    .placeholder(R.mipmap.ic_launcher)
-                    .into(imageView);
-
-            TextView textView = (TextView) convertView.findViewById(R.id.textView);
-            textView.setText(game.getName());
+            ((ListItem) convertView).setGame(game);
 
             return convertView;
         }
