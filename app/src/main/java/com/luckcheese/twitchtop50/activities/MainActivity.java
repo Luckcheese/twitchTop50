@@ -1,6 +1,5 @@
 package com.luckcheese.twitchtop50.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blunderer.materialdesignlibrary.activities.Activity;
+import com.blunderer.materialdesignlibrary.handlers.ActionBarDefaultHandler;
+import com.blunderer.materialdesignlibrary.handlers.ActionBarHandler;
 import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
 import com.luckcheese.twitchtop50.models.Game;
@@ -52,6 +54,26 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
         BroadcastManager.unregister(this, gamesReceiver);
     }
 
+    @Override
+    protected int getContentView() {
+        if (getIntent().hasExtra(INTENT_VIEW_TYPE)) {
+            viewType = (ViewTypes) getIntent().getSerializableExtra(INTENT_VIEW_TYPE);
+        } else {
+            viewType = ViewTypes.ListView;
+        }
+        return viewType == ViewTypes.GridView ? R.layout.activity_main_grid : R.layout.activity_main_list;
+    }
+
+    @Override
+    protected boolean enableActionBarShadow() {
+        return true;
+    }
+
+    @Override
+    protected ActionBarHandler getActionBarHandler() {
+        return new ActionBarDefaultHandler(this);
+    }
+
     private void setupView() {
         if (getIntent().hasExtra(INTENT_VIEW_TYPE)) {
             viewType = (ViewTypes) getIntent().getSerializableExtra(INTENT_VIEW_TYPE);
@@ -62,12 +84,10 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
         int adapterResource = 0;
         switch (viewType) {
             case GridView:
-                setContentView(R.layout.activity_main_grid);
                 adapterResource = R.layout.grid_item;
                 break;
 
             case ListView:
-                setContentView(R.layout.activity_main_list);
                 adapterResource = R.layout.list_item;
                 break;
         }
@@ -93,8 +113,10 @@ public class MainActivity extends Activity implements BroadcastManager.BaseBroad
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        if (item.getItemId() != R.id.toggleView) return false;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() != R.id.toggleView) {
+            return super.onOptionsItemSelected(item);
+        }
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
