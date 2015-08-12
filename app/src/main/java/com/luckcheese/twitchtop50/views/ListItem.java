@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.models.Game;
+import com.luckcheese.twitchtop50.models.ImageLinks;
 import com.squareup.picasso.Picasso;
 
 public class ListItem extends CardView {
@@ -42,7 +43,7 @@ public class ListItem extends CardView {
         textView.setText(game.getName());
 
         Picasso.with(getContext())
-                .load(game.getLogoImageUrl(Game.ImageLinks.ImageSize.Medium))
+                .load(game.getLogoImageUrl(ImageLinks.ImageSize.Medium))
                 .placeholder(R.mipmap.ic_launcher)
                 .into(imageView);
     }
