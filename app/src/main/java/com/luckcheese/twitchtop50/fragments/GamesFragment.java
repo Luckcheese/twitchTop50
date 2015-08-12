@@ -14,6 +14,8 @@ import com.luckcheese.twitchtop50.models.TwitchResult;
 
 public class GamesFragment extends Fragment {
 
+    private GamesListAdapter adapter;
+
     public static GamesFragment newInstance(ViewType viewType) {
         Bundle b = new Bundle();
         b.putSerializable("viewType", viewType);
@@ -24,21 +26,18 @@ public class GamesFragment extends Fragment {
         return frag;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new GamesListAdapter(getActivity(), getViewType().listItemResourceId);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(getViewType().viewResourceId, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        configAdapter();
-    }
-
-    private void configAdapter() {
-        AbsListView listView = (AbsListView) getView().findViewById(R.id.listView);
-        listView.setAdapter(new GamesListAdapter(getActivity(), getViewType().listItemResourceId));
+        View fragView = inflater.inflate(getViewType().viewResourceId, container, false);
+        ((AbsListView) fragView.findViewById(R.id.listView)).setAdapter(adapter);
+        return fragView;
     }
 
     public ViewType getViewType() {
@@ -46,8 +45,6 @@ public class GamesFragment extends Fragment {
     }
 
     public void setGames(TwitchResult games) {
-        AbsListView listView = (AbsListView) getView().findViewById(R.id.listView);
-        GamesListAdapter adapter = (GamesListAdapter) listView.getAdapter();
         adapter.setItems(games.getTop());
         adapter.notifyDataSetChanged();
     }
