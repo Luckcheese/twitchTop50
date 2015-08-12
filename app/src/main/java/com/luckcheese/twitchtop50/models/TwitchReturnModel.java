@@ -13,7 +13,6 @@ import java.util.List;
 
 public class TwitchReturnModel extends JSONObject implements Serializable {
 
-    private int _total;
     private List<Game.Entry> top;
 
     public List<Game.Entry> getTop() {
