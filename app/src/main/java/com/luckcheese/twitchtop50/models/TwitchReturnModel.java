@@ -14,7 +14,6 @@ import java.util.List;
 public class TwitchReturnModel extends JSONObject implements Serializable {
 
     private int _total;
-    private Links _links;
     private List<Game.Entry> top;
 
     public List<Game.Entry> getTop() {
@@ -27,13 +26,5 @@ public class TwitchReturnModel extends JSONObject implements Serializable {
         String firstPageUrl = "https://api.twitch.tv/kraken/games/top?limit=50";
         JsonRequest stringRequest = new TwitchRequest(context, firstPageUrl);
         TwitchTop50App.getQueue().add(stringRequest);
-    }
-
-    // ----- Related classes --------------------------------------------------
-
-    public static final class Links implements Serializable {
-        private String self;
-        private String next;
-        private String prev;
     }
 }
