@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 
-public class TwitchReturnModel extends JSONObject implements Serializable {
+public class TwitchResult extends JSONObject implements Serializable {
 
     private List<Game.Entry> top;
 

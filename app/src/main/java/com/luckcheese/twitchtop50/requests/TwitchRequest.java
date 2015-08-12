@@ -10,11 +10,11 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.luckcheese.twitchtop50.TwitchTop50App;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
-import com.luckcheese.twitchtop50.models.TwitchReturnModel;
+import com.luckcheese.twitchtop50.models.TwitchResult;
 
 import java.io.UnsupportedEncodingException;
 
-public class TwitchRequest extends JsonRequest<TwitchReturnModel> {
+public class TwitchRequest extends JsonRequest<TwitchResult> {
 
     public TwitchRequest(Context context, String url) {
         super(Method.GET, url, null,
@@ -23,10 +23,10 @@ public class TwitchRequest extends JsonRequest<TwitchReturnModel> {
     }
 
     @Override
-    protected Response<TwitchReturnModel> parseNetworkResponse(NetworkResponse response) {
+    protected Response<TwitchResult> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            TwitchReturnModel jsonResult = TwitchTop50App.getGson().fromJson(json, TwitchReturnModel.class);
+            TwitchResult jsonResult = TwitchTop50App.getGson().fromJson(json, TwitchResult.class);
             Cache.Entry entry = HttpHeaderParser.parseCacheHeaders(response);
             return Response.success(jsonResult, entry);
         } catch (UnsupportedEncodingException e) {

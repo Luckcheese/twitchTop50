@@ -19,11 +19,11 @@ public class BroadcastManager {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
-    public static Response.Listener<TwitchReturnModel> getDefaultRequestListener(final Context context, final Type type) {
-        return new Response.Listener<TwitchReturnModel>() {
+    public static Response.Listener<TwitchResult> getDefaultRequestListener(final Context context, final Type type) {
+        return new Response.Listener<TwitchResult>() {
 
             @Override
-            public void onResponse(TwitchReturnModel response) {
+            public void onResponse(TwitchResult response) {
                 Intent intent = new Intent(type.id);
                 intent.putExtra("success", true);
                 intent.putExtra("data", response);

@@ -14,15 +14,15 @@ import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.fragments.GamesFragment;
 import com.luckcheese.twitchtop50.models.BaseBroadcastReceiver;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
-import com.luckcheese.twitchtop50.models.TwitchReturnModel;
+import com.luckcheese.twitchtop50.models.TwitchResult;
 
 public class MainActivity extends ViewPagerActivity implements
-        BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel>,
+        BaseBroadcastReceiver.BaseBroadCastListener<TwitchResult>,
         ViewPager.OnPageChangeListener {
 
-    private BaseBroadcastReceiver<TwitchReturnModel> gamesReceiver;
+    private BaseBroadcastReceiver<TwitchResult> gamesReceiver;
 
-    private TwitchReturnModel top50Games;
+    private TwitchResult top50Games;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class MainActivity extends ViewPagerActivity implements
         super.onStart();
         BroadcastManager.register(this, BroadcastManager.Type.TopGames, gamesReceiver);
 
-        TwitchReturnModel.fetch(this);
+        TwitchResult.fetch(this);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MainActivity extends ViewPagerActivity implements
     // ----- BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener -----
 
     @Override
-    public void onSuccess(TwitchReturnModel data) {
+    public void onSuccess(TwitchResult data) {
         top50Games = data;
         getCurrentFragment().setGames(top50Games);
     }

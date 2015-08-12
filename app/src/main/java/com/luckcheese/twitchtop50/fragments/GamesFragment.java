@@ -10,7 +10,7 @@ import android.widget.AbsListView;
 
 import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.adapters.GamesListAdapter;
-import com.luckcheese.twitchtop50.models.TwitchReturnModel;
+import com.luckcheese.twitchtop50.models.TwitchResult;
 
 public class GamesFragment extends Fragment {
 
@@ -68,7 +68,7 @@ public class GamesFragment extends Fragment {
         return (ViewType) getArguments().getSerializable("viewType");
     }
 
-    public void setGames(TwitchReturnModel games) {
+    public void setGames(TwitchResult games) {
         AbsListView listView = (AbsListView) getView().findViewById(R.id.listView);
         GamesListAdapter adapter = (GamesListAdapter) listView.getAdapter();
         adapter.setItems(games.getTop());
