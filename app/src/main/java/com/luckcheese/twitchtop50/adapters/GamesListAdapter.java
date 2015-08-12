@@ -11,7 +11,7 @@ import com.luckcheese.twitchtop50.views.ListItem;
 
 import java.util.List;
 
-public final class GamesListAdapter extends ArrayAdapter<Game.Entry> {
+public final class GamesListAdapter extends ArrayAdapter<Game> {
 
     private LayoutInflater inflater;
     private int resource;
@@ -29,13 +29,13 @@ public final class GamesListAdapter extends ArrayAdapter<Game.Entry> {
             convertView = inflater.inflate(resource, parent, false);
         }
 
-        Game game = getItem(position).getGame();
+        Game game = getItem(position);
         ((ListItem) convertView).setGame(game);
 
         return convertView;
     }
 
-    public void setItems(List<Game.Entry> items) {
+    public void setItems(List<Game> items) {
         clear();
         addAll(items);
     }

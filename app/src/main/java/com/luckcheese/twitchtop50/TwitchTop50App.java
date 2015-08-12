@@ -5,6 +5,9 @@ import android.app.Application;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.luckcheese.twitchtop50.models.Game;
+import com.luckcheese.twitchtop50.parsers.TwitchResultItemParser;
 
 public class TwitchTop50App extends Application {
 
@@ -29,6 +32,9 @@ public class TwitchTop50App extends Application {
 
     private void initRequestHelpers() {
         queue = Volley.newRequestQueue(this);
-        gson = new Gson();
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Game.class, new TwitchResultItemParser());
+        gson = builder.create();
     }
 }
