@@ -14,8 +14,6 @@ import com.luckcheese.twitchtop50.models.TwitchResult;
 
 public class GamesFragment extends Fragment {
 
-    private ViewType viewType;
-
     public static GamesFragment newInstance(ViewType viewType) {
         Bundle b = new Bundle();
         b.putSerializable("viewType", viewType);
@@ -29,18 +27,7 @@ public class GamesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int layoutResourceId;
-        switch (getViewType()) {
-            case ListView:
-                layoutResourceId = R.layout.fragment_games_list;
-                break;
-
-            default:
-                layoutResourceId = R.layout.fragment_games_grid;
-                break;
-        }
-
-        return inflater.inflate(layoutResourceId, container, false);
+        return inflater.inflate(getViewType().viewResourceId, container, false);
     }
 
     @Override
@@ -50,18 +37,8 @@ public class GamesFragment extends Fragment {
     }
 
     private void configAdapter() {
-        int adapterResource = 0;
-        switch (getViewType()) {
-            case GridView:
-                adapterResource = R.layout.grid_item;
-                break;
-
-            default:
-                adapterResource = R.layout.list_item;
-                break;
-        }
         AbsListView listView = (AbsListView) getView().findViewById(R.id.listView);
-        listView.setAdapter(new GamesListAdapter(getActivity(), adapterResource));
+        listView.setAdapter(new GamesListAdapter(getActivity(), getViewType().listItemResourceId));
     }
 
     public ViewType getViewType() {
@@ -78,6 +55,15 @@ public class GamesFragment extends Fragment {
     // ----- Related classes --------------------------------------------------
 
     public enum ViewType {
-        ListView, GridView
+        ListView(R.layout.fragment_games_list, R.layout.list_item),
+        GridView(R.layout.fragment_games_grid, R.layout.grid_item);
+
+        public final int viewResourceId;
+        public final int listItemResourceId;
+
+        ViewType(int viewResourceId, int listItemResourceId) {
+            this.viewResourceId = viewResourceId;
+            this.listItemResourceId = listItemResourceId;
+        }
     }
 }
