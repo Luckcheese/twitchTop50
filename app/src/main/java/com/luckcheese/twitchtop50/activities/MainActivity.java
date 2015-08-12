@@ -12,21 +12,22 @@ import com.blunderer.materialdesignlibrary.handlers.ActionBarHandler;
 import com.blunderer.materialdesignlibrary.handlers.ViewPagerHandler;
 import com.luckcheese.twitchtop50.R;
 import com.luckcheese.twitchtop50.fragments.GamesFragment;
+import com.luckcheese.twitchtop50.models.BaseBroadcastReceiver;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
 import com.luckcheese.twitchtop50.models.TwitchReturnModel;
 
 public class MainActivity extends ViewPagerActivity implements
-        BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel>,
+        BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel>,
         ViewPager.OnPageChangeListener {
 
-    private BroadcastManager.BaseBroadcastReceiver<TwitchReturnModel> gamesReceiver;
+    private BaseBroadcastReceiver<TwitchReturnModel> gamesReceiver;
 
     private TwitchReturnModel top50Games;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gamesReceiver = new BroadcastManager.BaseBroadcastReceiver<>(this);
+        gamesReceiver = new BaseBroadcastReceiver<>(this);
 
         setOnPageChangeListener(this);
     }
