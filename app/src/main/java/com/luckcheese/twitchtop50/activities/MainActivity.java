@@ -15,8 +15,9 @@ import com.luckcheese.twitchtop50.fragments.GamesFragment;
 import com.luckcheese.twitchtop50.models.BroadcastManager;
 import com.luckcheese.twitchtop50.models.TwitchReturnModel;
 
-public class MainActivity extends ViewPagerActivity
-        implements BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel> {
+public class MainActivity extends ViewPagerActivity implements
+        BroadcastManager.BaseBroadcastReceiver.BaseBroadCastListener<TwitchReturnModel>,
+        ViewPager.OnPageChangeListener {
 
     private BroadcastManager.BaseBroadcastReceiver<TwitchReturnModel> gamesReceiver;
 
@@ -27,24 +28,7 @@ public class MainActivity extends ViewPagerActivity
         super.onCreate(savedInstanceState);
         gamesReceiver = new BroadcastManager.BaseBroadcastReceiver<>(this);
 
-        setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (top50Games != null) {
-                    getCurrentFragment().setGames(top50Games);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        setOnPageChangeListener(this);
     }
 
     @Override
@@ -133,5 +117,24 @@ public class MainActivity extends ViewPagerActivity
     @Override
     public int defaultViewPagerPageSelectedPosition() {
         return 0;
+    }
+
+    // ----- ViewPager.OnPageChangeListener -----------------------------------
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (top50Games != null) {
+            getCurrentFragment().setGames(top50Games);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
